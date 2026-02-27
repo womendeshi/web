@@ -1,0 +1,10 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+PyPDF2==3.0.1
+jieba==0.42.1
+python-multipart==0.0.9
+pydantic==2.9.2
+openai==1.58.1
+swagger-ui-bundle-v2==5.31.0
+redis>=5.0.0
+

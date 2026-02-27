@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简历分析与匹配（MVP）</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>AI 赋能的智能简历分析系统</h1>
+        <p class="subtitle">上传 PDF 简历 → 抽取关键信息 → 输入岗位需求 → 计算匹配度评分</p>
+      </header>
+
+      <section class="card">
+        <h2>后端地址</h2>
+        <div class="row">
+          <label for="apiBase">API Base URL</label>
+          <input id="apiBase" type="text" placeholder="http://127.0.0.1:8000" />
+          <button id="btnHealth" class="btn secondary">健康检查</button>
+        </div>
+        <p class="hint">
+          部署到 GitHub Pages 后，这里需要填你已公网可访问的后端地址（例如阿里云 Serverless API 网关地址）。
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>1) 上传简历（PDF）并解析</h2>
+        <div class="row">
+          <input id="pdfFile" type="file" accept="application/pdf" />
+          <button id="btnUpload" class="btn">上传并解析</button>
+        </div>
+        <div class="kv">
+          <div class="k">resume_id</div>
+          <div class="v"><code id="resumeId">-</code></div>
+        </div>
+        <details>
+          <summary>查看抽取的关键信息 structured_info</summary>
+          <pre id="structuredInfo" class="pre">-</pre>
+        </details>
+        <details>
+          <summary>查看 raw_text（可能较长）</summary>
+          <pre id="rawText" class="pre">-</pre>
+        </details>
+      </section>
+
+      <section class="card">
+        <h2>2) 输入岗位描述并匹配评分</h2>
+        <label for="jobDesc">岗位需求描述（JD）</label>
+        <textarea
+          id="jobDesc"
+          rows="8"
+          placeholder="例如：需要 Python / Django / MySQL，3年以上经验……"
+        ></textarea>
+        <div class="row">
+          <button id="btnMatch" class="btn">对已上传简历进行匹配</button>
+        </div>
+        <details open>
+          <summary>匹配结果（JSON）</summary>
+          <pre id="matchResult" class="pre">-</pre>
+        </details>
+      </section>
+
+      <section class="card">
+        <h2>日志</h2>
+        <pre id="log" class="pre log"></pre>
+      </section>
+
+      <footer class="footer">
+        <p>
+          注意：不要把任何 API Key 放到前端。前端只调用你的后端接口，后端再去调用大模型。
+        </p>
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+
