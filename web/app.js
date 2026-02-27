@@ -11,10 +11,8 @@ function log(line) {
   el.textContent = `[${now()}] ${line}\n` + el.textContent;
 }
 
-function getApiBase() {
-  const v = $("apiBase").value.trim();
-  return v ? v.replace(/\/+$/, "") : "https://python-224058-8-1402833867.sh.run.tcloudbase.com";
-}
+// 固定后端地址（可按需在这里改）
+const API_BASE = "https://python-224058-8-1402833867.sh.run.tcloudbase.com";
 
 async function fetchJson(url, options) {
   const res = await fetch(url, options);
@@ -32,15 +30,7 @@ async function fetchJson(url, options) {
   return data;
 }
 
-async function health() {
-  const api = getApiBase();
-  log(`Health check: ${api}/health`);
-  const data = await fetchJson(`${api}/health`, { method: "GET" });
-  log(`Health OK: ${JSON.stringify(data)}`);
-}
-
 async function upload() {
-  const api = getApiBase();
   const file = $("pdfFile").files[0];
   if (!file) {
     alert("请选择一个 PDF 文件");
@@ -52,7 +42,7 @@ async function upload() {
     log(`Uploading: ${file.name} (${file.size} bytes)`);
     const fd = new FormData();
     fd.append("file", file);
-    const data = await fetchJson(`${api}/api/resume/upload`, {
+    const data = await fetchJson(`${API_BASE}/api/resume/upload`, {
       method: "POST",
       body: fd,
     });
@@ -67,7 +57,6 @@ async function upload() {
 }
 
 async function match() {
-  const api = getApiBase();
   const resumeId = $("resumeId").textContent.trim();
   if (!resumeId || resumeId === "-") {
     alert("请先上传简历，拿到 resume_id");
@@ -82,11 +71,14 @@ async function match() {
   $("btnMatch").disabled = true;
   try {
     log(`Matching resume_id=${resumeId}`);
-    const data = await fetchJson(`${api}/api/resume/${encodeURIComponent(resumeId)}/match`, {
+    const data = await fetchJson(
+      `${API_BASE}/api/resume/${encodeURIComponent(resumeId)}/match`,
+      {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ job_description: jobDesc }),
-    });
+      },
+    );
     $("matchResult").textContent = JSON.stringify(data, null, 2);
     log(`Match OK, overall_score=${data?.scores?.overall_score ?? "n/a"}`);
   } finally {
@@ -95,14 +87,6 @@ async function match() {
 }
 
 function initDefaults() {
-  $("apiBase").value =
-    localStorage.getItem("apiBase") ||
-    "https://python-224058-8-1402833867.sh.run.tcloudbase.com";
-  $("apiBase").addEventListener("change", () => {
-    localStorage.setItem("apiBase", $("apiBase").value.trim());
-  });
-
-  $("btnHealth").addEventListener("click", () => health().catch((e) => log(`Health ERROR: ${e.message}`)));
   $("btnUpload").addEventListener("click", () => upload().catch((e) => log(`Upload ERROR: ${e.message}`)));
   $("btnMatch").addEventListener("click", () => match().catch((e) => log(`Match ERROR: ${e.message}`)));
 }
