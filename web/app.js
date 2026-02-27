@@ -13,7 +13,7 @@ function log(line) {
 
 function getApiBase() {
   const v = $("apiBase").value.trim();
-  return v ? v.replace(/\/+$/, "") : "http://127.0.0.1:8000";
+  return v ? v.replace(/\/+$/, "") : "https://python-224058-8-1402833867.sh.run.tcloudbase.com";
 }
 
 async function fetchJson(url, options) {
@@ -95,7 +95,9 @@ async function match() {
 }
 
 function initDefaults() {
-  $("apiBase").value = localStorage.getItem("apiBase") || "http://127.0.0.1:8000";
+  $("apiBase").value =
+    localStorage.getItem("apiBase") ||
+    "https://python-224058-8-1402833867.sh.run.tcloudbase.com";
   $("apiBase").addEventListener("change", () => {
     localStorage.setItem("apiBase", $("apiBase").value.trim());
   });
